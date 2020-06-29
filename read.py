@@ -12,5 +12,5 @@ def readid():
 
 def readtext():
 	id,text = reader.read()
-	return tex
+	return text
 

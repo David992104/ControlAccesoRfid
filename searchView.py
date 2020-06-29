@@ -1,9 +1,14 @@
 from tkinter import *
 from tkinter import font
+from read import *
+from consultas import searchData
+import os
+import time
+from tkinter import messagebox
 
 class searchView(Frame):
     def __init__(self, search):
-        super().__init__(search)
+        Frame.__init__(self, search)
         search.title("Busqueda de usuarios")
         search.configure(width=800, height=400)
         self.place(relwidth=1, relheight=1)
@@ -37,11 +42,45 @@ class searchView(Frame):
         self.lblArea.place(x=350, y=200)
         self.lblPuesto = Label(self, text='Puesto: ', font=fontLabel)
         self.lblPuesto.place(x=350, y=250)
-        self.btnNext = Button(self, text='Siguiente', font=fontLabel)
+        self.btnNext = Button(self, text='Siguiente', font=fontLabel, command=self.read)
         self.btnNext.place(x=600, y=300)
         
     def read(self):
+        self.lblNombre.config(text='Nombre')
+        self.lblApellidos.config(text = 'Apellidos')
+        self.lblMatricula.config(text='Matricula')
+        self.lblArea.config(text='Area')
+        self.lblPuesto.config(text='Puesto')
+        self.ruta.set("""/home/pulcera/Documentos/rfid/img/avatars.png""")
+        self.imagen = PhotoImage(file=self.ruta.get())
+        self.avatar.configure(image=self.imagen)
         
+        serie = readid()
+        clave = readtext()
+        print(serie)
+        print(clave)
+        data = searchData(serie, clave)
+        #print(data)
+        try:
+            self.lblNombre.config(text=data[0][0])
+            self.lblApellidos.config(text = data[0][1] + ' ' + data[0][2])
+            self.lblMatricula.config(text=data[0][3])
+            self.lblArea.config(text=data[0][5])
+            self.lblPuesto.config(text=data[0][6])
+            
+            path = '/home/pulcera/Documentos/rfid/img/imagen.png'
+            with open(path, 'wb') as file:
+                file.write(data[0][4])
+                
+            if os.path.exists(path):
+           
+                self.imagen = PhotoImage(file=path)
+                self.avatar.configure(image=self.imagen)
+        except:
+            print('No existe el usuario')
+            messagebox.showwarning("Usuario no existe", "El usuario no existe")
+            
+         #   os.remove(path)
 
 search = Tk()
 app = searchView(search)

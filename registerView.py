@@ -5,10 +5,10 @@ from tkinter import *
 from tkinter import messagebox as MessageBox
 from tkinter import filedialog
 import time
-from getData import *
+#from getData import *
 from generateClave import generate
 from write import writeClave
-from consultas import saveUser
+from consultas import saveUser, getCarreras, getOcupacion
 from read import readid
 
 class main(ttk.Frame):
