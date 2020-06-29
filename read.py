@@ -10,7 +10,7 @@ def readid():
 	id, text = reader.read()
 	return id
 
-def read():
+def readtext():
 	id,text = reader.read()
 	return tex
 

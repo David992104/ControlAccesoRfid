@@ -1,15 +1,15 @@
 import tkinter as tk
 from tkinter import ttk
 import tkinter.font as tkFont
-#from tkinter import PhotoImage
 from tkinter import *
 from tkinter import messagebox as MessageBox
-from read import readid
+from tkinter import filedialog
 import time
 from getData import *
 from generateClave import generate
 from write import writeClave
 from consultas import saveUser
+from read import readid
 
 class main(ttk.Frame):
     def __init__(self, master):
@@ -32,8 +32,9 @@ class main(ttk.Frame):
         self.separatorH.place(x=0, y=100, width=900, height=5)
 
         #Seccion de imagen tendran una altura de 495px y anchura de 300px
-        self.ruta = "/home/pulcera/Documentos/rfid/img/avatars.png"
-        self.imagen = PhotoImage(file=self.ruta)
+        self.ruta = StringVar()
+        self.ruta.set("/home/pulcera/Documentos/rfid/img/avatars.png")
+        self.imagen = PhotoImage(file=self.ruta.get())
         self.avatar = Label(self, image=self.imagen)     
         self.avatar.place(x=30, y=135, width=240, height=300)               
         self.btnLoad = ttk.Button(self, text='Cargar imagen', command=self.cargarImagen)
@@ -78,11 +79,16 @@ class main(ttk.Frame):
         self.cmbOcupacion.place(x=500, y=385, width=300, height=30)
         self.cmbOcupacion['values'] = getOcupacion()
 
-        self.btnCancelar = ttk.Button(self, text='Cancelar')
+        self.btnCancelar = ttk.Button(self, text='Cancelar', command=self.cancelar)
         self.btnCancelar.place(x=350, y=450, width=150, height=40)
         self.btnGuardar = ttk.Button(self, text='Guardar', command=self.enviarDatos)
         self.btnGuardar.place(x=600, y=450, width=150, height=40)
-
+            
+    def cancelar(self):
+        op = MessageBox.askokcancel('Salir', '¿Desea Salir ?')
+        if op == True:
+            self.master.destroy()
+        
     def enviarDatos(self):
         title = 'Guadar datos de ' + str(self.nombre.get())
         nombre = str(self.nombre.get())
@@ -100,13 +106,16 @@ class main(ttk.Frame):
 
     def cargarImagen(self):
         print('Cargando imagen')
+        file_path = filedialog.askopenfilename()
+        self.ruta = (file_path)
+        print(self.ruta)
+        self.imagen = PhotoImage(file=file_path)
+        self.avatar.image = self.imagen
+        self.avatar.configure(image=self.imagen)
 
     def capturarImagen(self):
         print('Capturando')
         
-        
-varGlobalClave= ""
-varGlobalId = " hola"
         
 class saveData:
     def __init__(self, parent, title, nom, ape1, ape2, matricula, car, ocup, img):
